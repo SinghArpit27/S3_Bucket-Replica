@@ -2,9 +2,6 @@ import mongoose from "mongoose";
 
 const objectSchema = new mongoose.Schema({
 
-    // bucketId: { type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Bucket'}], default: [], },
-    // object_creatorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    // is_deleted: { type: Boolean }
     object_name: {
         type: String,
         required: true
@@ -36,8 +33,12 @@ const objectSchema = new mongoose.Schema({
     },
     isDeleted: { 
         type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-        default: [],
+        default: false,
     },
+    version: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Versioning'
+    }
 
 },
 { timestamps: true });
