@@ -25,17 +25,16 @@ const objectVersioningSchema = new mongoose.Schema({
             required: true
         },
         committed_time: {
-            type: Date, default:
-            Date.now
+            type: Date,
+            default: Date.now
         },
         version: {
-            type: String,
+            type: String,   //Full semantic version including build (1.5.43.137)
             required: true
         },
-
     },],
 
-    version: {
+    current_version: {
         type: String,
         required: true
     },

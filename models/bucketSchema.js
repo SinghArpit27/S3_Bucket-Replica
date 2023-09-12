@@ -11,33 +11,31 @@ const bucketSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    total_bucket_size: {
-        type: String,
-        required: true 
-    },
-    bucket_used_size: {
-        type: String,
-        required: true
-    },
-    bucket_remaining_size: {
-        type: String,
-        required: true
+    storage_space: {
+        total_bucket_size: {
+            type: String,
+            required: true 
+        },
+        bucket_used_size: {
+            type: String,
+            required: true
+        },
+        bucket_remaining_size: {
+            type: String,
+            required: true
+        },
     },
     bucket_creatorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    auth_users: {
+    bucket_access: {
         type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
         default: [],
     },
-    // bucket_access: {
-    //     type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    //     default: [],
-    // },
-    bucket_access: {
-        userId: {
+    auth_users: [{
+        bucket_access_userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
         },
@@ -45,13 +43,14 @@ const bucketSchema = new mongoose.Schema({
             type: String,
             default: "Read"
         }
-    },
+    },],
     bucket_type: {
         type: String,
         required: true
     },
     isEmpty: {
-        type: Boolean
+        type: Boolean,
+        default: true
     },
     isDeleted: { 
         type: Boolean,
