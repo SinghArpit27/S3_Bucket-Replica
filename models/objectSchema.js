@@ -29,12 +29,12 @@ const objectSchema = new mongoose.Schema(
     },
     bucketId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Bucket"
+      ref: "Bucket",
       // required: true
     },
-    isDeleted: { 
+    isDeleted: {
       type: Boolean,
-      default: false
+      default: false,
     },
     version: {
       type: mongoose.Schema.Types.ObjectId,

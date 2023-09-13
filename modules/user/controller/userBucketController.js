@@ -4,6 +4,7 @@ import { getPlanLimits } from '../../../helper/subscriptionPlans.js';
 import Bucket from '../../../models/bucketSchema.js';
 import User from '../../../models/userSchema.js';
 import Object from '../../../models/objectSchema.js';
+import Versioning from '../../../models/objectVersioning.js';
 
 
 
@@ -178,14 +179,31 @@ export const uploadObject = async (req,res) => {
 
                 // Increment the total_objects count in the bucket
                 bucketData.total_objects += 1;
-
+                
+                // update isEmpty field
                 await Bucket.findByIdAndUpdate({ _id: req.params.id}, {$set:{ isEmpty: false }});
 
                 // Save the updated bucket document
                 await bucketData.save();
 
-                httpResponse(res, statusCode.CREATED, responseStatus.SUCCESS, responseMessage.OBJECT_UPLOAD_SUCCESS, objectData);
 
+                // Versioning Code
+                // Create a new version document
+                const newVersion = new Versioning({
+                  objectID: objectData._id, // Reference to the uploaded object
+                  object_name: objectData.object_name,
+                  commit_userId: userId,
+                  object_url: objectData.object_url,
+                  current_version: "1.0.0", // Set the initial version as 1.0.0 (or any desired initial version)
+                  build_number: "1", // Set the initial build number as 1 (or any desired initial build number)
+                });
+                const versionData = await newVersion.save();
+
+
+                // Update Version ID into object for ref
+                const updatedObject = await Object.findByIdAndUpdate({ _id: objectData._id }, {$set: { version: versionData._id }});
+                console.log(updatedObject + "\n\n\n\n" + versionData);
+                httpResponse(res, statusCode.CREATED, responseStatus.SUCCESS, responseMessage.OBJECT_UPLOAD_SUCCESS, updatedObject);
               }
             }
           }else{
@@ -230,34 +248,16 @@ async function updateStorageSpace(bucketId, objectSize) {
 }
 
 
+// function to generate and updated versioning in the Versioning Schema
+const versioning = async (objectId, objectName, objectUrl, commitMessage) => {
+  try {
+
+    const userId = req.userId;
 
 
-
-// export const allowRoles = async (req,res) => {
-//   try {
-
-//     const userId = req.userId;
-//     const userData = await User.findById({ _id: userId});
-//     if(userData){
-      
-//       const accessUserId = req.params.id;
-//       const operationRole = req.body.operation_role;
-//       // console.log(accessUserId)
-
-//       const buckets = await Bucket.findOne({ auth_users:[{ bucket_access_userId: accessUserId }] });
-//       // const buckets = await Bucket.findOne({$or:[{ bucket_creatorId: userId }, { bucket_access_userId: accessUserId }]});
-//       if(buckets){
-
-//         console.log("Bucket Found")
-//         httpResponse(res, statusCode.OK, responseStatus.SUCCESS, responseMessage.SUCCESS, buckets);
-        
-//       }else{
-//         httpResponse(res, statusCode.BAD_REQUEST, responseStatus.FAILURE, responseMessage.BUCKET_NOT_FOUND);
-//       }
-//     }else{
-//       httpResponse(res, statusCode.BAD_REQUEST, responseStatus.FAILURE, responseMessage.USER_NOT_FOUND);
-//     }
-//   } catch (error) {
-//     httpResponse(res, statusCode.INTERNAL_SERVER_ERROR, responseStatus.FAILURE, responseMessage.INTERNAL_SERVER_ERROR, error.message);
-//   }
-// }
+  } catch (error) {
+    // Handle any errors that may occur during the update
+    console.error("Error While Versionig:", error.message);
+    httpResponse(res, statusCode.INTERNAL_SERVER_ERROR, responseStatus.FAILURE, responseMessage.INTERNAL_SERVER_ERROR, error.message);
+  }
+}
