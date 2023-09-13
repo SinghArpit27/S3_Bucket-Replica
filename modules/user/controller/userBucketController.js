@@ -3,6 +3,7 @@ import httpResponse from '../../../helper/httpResponse.js';
 import { getPlanLimits } from '../../../helper/subscriptionPlans.js';
 import Bucket from '../../../models/bucketSchema.js';
 import User from '../../../models/userSchema.js';
+import Object from '../../../models/objectSchema.js';
 
 
 
@@ -118,16 +119,113 @@ export const uploadObject = async (req,res) => {
 
     const userId = req.userId;
     const userData = await User.findById({ _id: userId});
+    const objectSize = req.file.size // file Size In Bytes
     if(userData){
-      console.log("Upload objects");
-      httpResponse(res, statusCode.OK, responseStatus.SUCCESS, responseMessage.SUCCESS);
+
+      // Get plan limits based on the user's selected plan
+      const userPlan = getPlanLimits(userData.user_active_plan);
+
+      const bucketData = await Bucket.findById({ _id: req.params.id });
+      if(bucketData){
+
+
+        const remainingBucketSize = parseInt(bucketData.storage_space.bucket_remaining_size);
+
+        if (remainingBucketSize >= objectSize) {
+          const userAccess = bucketData.auth_users.find(authUser => authUser.bucket_access_userId.toString() === userId);
+          if(userAccess){
+            // console.log(userAccess)
+            const operationAccess = userAccess.operation_access;
+            if(operationAccess === "Read"){
+              httpResponse(res, statusCode.BAD_REQUEST, responseStatus.FAILURE, responseMessage.DONT_HAVE_WRITE_ACCESS);
+            }else{
+
+              // Check file size based on the user's plan
+              const fileSize = req.file.size;
+              if (fileSize < userPlan.minFileSize || fileSize > userPlan.maxFileSize) {
+
+                res.status(400).json({
+                  success: 0,
+                  message: `File size should be between ${userPlan.minFileSize} and ${userPlan.maxFileSize} bytes`
+                })
+
+              } else {
+
+                const fileName = req.file.filename;
+
+                // Use string operations to extract the file extension
+                const fileExtension = fileName.split('.').pop();
+
+                // Extract the actual file name without the timestamp
+                const parts = fileName.split('-');
+                const actualFileName = parts.slice(1).join('-');
+
+                const newObject = new Object({
+                  object_name: req.body.object_name,
+                  object_url: fileName,
+                  object_creatorId: userId,
+                  object_size: objectSize,
+                  object_type: fileExtension,
+                  object_key: actualFileName,
+                  bucketId: req.params.id
+                });
+                const objectData = await newObject.save();
+
+
+                // update Bucket Document in DB
+                // Call a function to update the storage space for the bucket
+                await updateStorageSpace(req.params.id, objectSize);
+
+                // Increment the total_objects count in the bucket
+                bucketData.total_objects += 1;
+
+                await Bucket.findByIdAndUpdate({ _id: req.params.id}, {$set:{ isEmpty: false }});
+
+                // Save the updated bucket document
+                await bucketData.save();
+
+                httpResponse(res, statusCode.CREATED, responseStatus.SUCCESS, responseMessage.OBJECT_UPLOAD_SUCCESS, objectData);
+
+              }
+            }
+          }else{
+            httpResponse(res, statusCode.BAD_REQUEST, responseStatus.FAILURE, responseMessage.USER_NOT_BUCKET_ACCESS);
+          }
+        }else{
+          httpResponse(res, statusCode.BAD_REQUEST, responseStatus.FAILURE, responseMessage.STORAGE_SPACE_EXCEEDED);
+        }
+      }else{
+        httpResponse(res, statusCode.BAD_REQUEST, responseStatus.FAILURE, responseMessage.BUCKET_NOT_FOUND);
+      }      
     }else{
       httpResponse(res, statusCode.BAD_REQUEST, responseStatus.FAILURE, responseMessage.USER_NOT_FOUND);
     }
-    
-
   } catch (error) {
     httpResponse(res, statusCode.INTERNAL_SERVER_ERROR, responseStatus.FAILURE, responseMessage.INTERNAL_SERVER_ERROR, error.message);
+  }
+}
+
+// Function to update storage space in the Bucket schema
+async function updateStorageSpace(bucketId, objectSize) {
+  try {
+    const bucket = await Bucket.findById(bucketId);
+
+    if (bucket) {
+      const currentBucketSize = parseInt(bucket.storage_space.bucket_used_size);
+      const newBucketSize = currentBucketSize + objectSize;
+      const remainingBucketSize = parseInt(bucket.storage_space.total_bucket_size) - newBucketSize;
+
+      // Update the bucket's storage space fields
+      bucket.storage_space.bucket_used_size = newBucketSize.toString();
+      bucket.storage_space.bucket_remaining_size = remainingBucketSize.toString();
+
+      await bucket.save();
+    }
+  } catch (error) {
+    // Handle any errors that may occur during the update
+    console.error("Error updating storage space:", error.message);
+    httpResponse(res, statusCode.INTERNAL_SERVER_ERROR, responseStatus.FAILURE, responseMessage.INTERNAL_SERVER_ERROR, error.message);
+
   }
 }
 

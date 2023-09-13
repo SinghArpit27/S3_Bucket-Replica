@@ -12,7 +12,7 @@ const objectSchema = new mongoose.Schema(
       required: true,
     },
     object_size: {
-      type: String,
+      type: Number,
       required: true,
     },
     object_type: {
@@ -28,12 +28,13 @@ const objectSchema = new mongoose.Schema(
       required: true,
     },
     bucketId: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Bucket" }],
-      default: [],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Bucket"
+      // required: true
     },
-    isDeleted: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-      default: false,
+    isDeleted: { 
+      type: Boolean,
+      default: false
     },
     version: {
       type: mongoose.Schema.Types.ObjectId,

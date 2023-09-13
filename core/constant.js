@@ -22,6 +22,9 @@ export const responseMessage = {
     BUCKET_NOT_FOUND: "Bucket Not Found",
     OPERATION_ACCESS_UPDATED: "Roles set successfully",
     USER_NOT_BUCKET_ACCESS: "User does not have bucket access",
+    OBJECT_UPLOAD_SUCCESS: "Object Upload Successfully",
+    DONT_HAVE_WRITE_ACCESS: "You don't have access to write or delete anything in this bucket",
+    STORAGE_SPACE_EXCEEDED: "Not enough storage space available",
 
     // Testing Messages
     MANUAL_ERR: "ARPIT",
