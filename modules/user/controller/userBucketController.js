@@ -89,7 +89,7 @@ export const allowRoles = async (req, res) => {
         const isAssociated = await Bucket.findOne({ "auth_users.bucket_access_userId": accessUserId });
         if (isAssociated) {
           // Check if the requesting user has permission to update operation_access
-          if (bucket.bucket_creatorId.toString() === userId || bucket.bucket_access.includes(userId)) {
+          if (bucket.bucket_creatorId.toString() === userId) {
             // Update the operation_access field for the specified user using aggregation
             await Bucket.updateOne(
               { _id: bucketId, "auth_users.bucket_access_userId": accessUserId },
@@ -128,7 +128,6 @@ export const uploadObject = async (req,res) => {
 
       const bucketData = await Bucket.findById({ _id: req.params.id });
       if(bucketData){
-
 
         const remainingBucketSize = parseInt(bucketData.storage_space.bucket_remaining_size);
 
@@ -187,22 +186,24 @@ export const uploadObject = async (req,res) => {
                 await bucketData.save();
 
 
+
                 // Versioning Code
                 // Create a new version document
                 const newVersion = new Versioning({
                   objectID: objectData._id, // Reference to the uploaded object
                   object_name: objectData.object_name,
-                  commit_userId: userId,
+                  creator_userId: userId,
+                  object_size: objectData.object_size,
+                  object_type: objectData.object_type,
                   object_url: objectData.object_url,
-                  current_version: "1.0.0", // Set the initial version as 1.0.0 (or any desired initial version)
-                  build_number: "1", // Set the initial build number as 1 (or any desired initial build number)
+                  object_key: objectData.object_key
                 });
                 const versionData = await newVersion.save();
 
 
                 // Update Version ID into object for ref
                 const updatedObject = await Object.findByIdAndUpdate({ _id: objectData._id }, {$set: { version: versionData._id }});
-                console.log(updatedObject + "\n\n\n\n" + versionData);
+                
                 httpResponse(res, statusCode.CREATED, responseStatus.SUCCESS, responseMessage.OBJECT_UPLOAD_SUCCESS, updatedObject);
               }
             }
@@ -219,6 +220,7 @@ export const uploadObject = async (req,res) => {
       httpResponse(res, statusCode.BAD_REQUEST, responseStatus.FAILURE, responseMessage.USER_NOT_FOUND);
     }
   } catch (error) {
+    console.log(error)
     httpResponse(res, statusCode.INTERNAL_SERVER_ERROR, responseStatus.FAILURE, responseMessage.INTERNAL_SERVER_ERROR, error.message);
   }
 }
@@ -244,20 +246,5 @@ async function updateStorageSpace(bucketId, objectSize) {
     console.error("Error updating storage space:", error.message);
     httpResponse(res, statusCode.INTERNAL_SERVER_ERROR, responseStatus.FAILURE, responseMessage.INTERNAL_SERVER_ERROR, error.message);
 
-  }
-}
-
-
-// function to generate and updated versioning in the Versioning Schema
-const versioning = async (objectId, objectName, objectUrl, commitMessage) => {
-  try {
-
-    const userId = req.userId;
-
-
-  } catch (error) {
-    // Handle any errors that may occur during the update
-    console.error("Error While Versionig:", error.message);
-    httpResponse(res, statusCode.INTERNAL_SERVER_ERROR, responseStatus.FAILURE, responseMessage.INTERNAL_SERVER_ERROR, error.message);
   }
 }

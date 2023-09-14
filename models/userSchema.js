@@ -32,10 +32,6 @@ const userSchema = new mongoose.Schema({
             message: 'Invalid plan name. Please choose from Basic Plan, Intermediate Plan, or Enterprise Plan',
         },
     },
-    orgName: {
-        type: String,
-        required: true
-    },
     user_role: {
         type: Number,
         required: true
