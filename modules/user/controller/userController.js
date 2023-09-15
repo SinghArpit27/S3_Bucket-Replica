@@ -175,23 +175,3 @@ export const updateUserProfile = async (req,res) => {
         httpResponse(res, statusCode.INTERNAL_SERVER_ERROR, responseStatus.FAILURE, responseMessage.INTERNAL_SERVER_ERROR, error.message);
     }
 }
-
-
-
-
-
-
-// Testing Protected API
-export const protectedController = async(req,res) => {
-    try {
-        
-        const userId = req.userId;
-        const userData = await User.findById({ _id: userId }).select({ _id: 0 });
-
-        httpResponse(res, statusCode.OK, responseStatus.SUCCESS, responseMessage.SUCCESS, userData);
-
-    } catch (error) {
-        httpResponse(res, statusCode.INTERNAL_SERVER_ERROR, responseStatus.FAILURE, responseMessage.INTERNAL_SERVER_ERROR, error.message);
-    }
-}
-

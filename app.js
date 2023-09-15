@@ -4,6 +4,8 @@ import connectDB from './config/database.js';
 import authRoute from './modules/user/router/userRoute.js';
 import bucketRoute from './modules/user/router/userBucketRoute.js';
 import morgan from 'morgan';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerDefinition } from './swaggerDefinition.js'
 
 const app = express();
 dotenv.config();
@@ -27,6 +29,8 @@ const accessLogStream = fs.createWriteStream(logFilePath, { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
 
 
+// Serve Swagger UI
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDefinition));
 
 // User Routes
 app.use('/', authRoute);

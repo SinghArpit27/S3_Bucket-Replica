@@ -1,5 +1,5 @@
 import express from 'express';
-import { changePassword, forgetPassword, loginUser, protectedController, registerUser, renewAccessToken, updateUserProfile } from '../controller/userController.js';
+import { changePassword, forgetPassword, loginUser, registerUser, renewAccessToken, updateUserProfile } from '../controller/userController.js';
 import { loginValidation, passwordValidation, registerValidation, updateProfileValidation } from '../../../middleware/userValidation.js';
 import { expressValidationResult } from '../../../helper/validationError.js';
 import { authenticateToken } from '../../../middleware/jwtAuthorization.js';
@@ -25,10 +25,5 @@ route.post('/changePassword', passwordValidation, authenticateToken, changePassw
 route.post('/updateProfile', updateProfileValidation, authenticateToken, updateUserProfile);
 
 
-
-
-
-// Protected Route for testing
-route.get('/protectedRoute', authenticateToken, protectedController);
 
 export default route;
