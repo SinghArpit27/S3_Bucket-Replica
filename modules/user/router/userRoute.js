@@ -26,4 +26,5 @@ route.post('/updateProfile', updateProfileValidation, authenticateToken, updateU
 
 
 
+
 export default route;

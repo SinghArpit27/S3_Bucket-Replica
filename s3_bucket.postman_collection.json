@@ -1,0 +1,329 @@
+{
+	"info": {
+		"_postman_id": "603e325a-7be0-4f39-8e61-20bdb5894725",
+		"name": "s3_bucket",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20630793"
+	},
+	"item": [
+		{
+			"name": "User Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Arpit Singh\",\r\n    \"email\": \"singharpit@gmail.com\",\r\n    \"phone\": 9335351855,\r\n    \"role\": 2,\r\n    \"plan\": \"Basic Plan\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/userRegister",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"userRegister"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/userLogin",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"userLogin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Renew Access Token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGZhY2IxZjQwMDcyMDQ3MjhiZmNjNDUiLCJpYXQiOjE2OTQ0Mjc5MDIsImV4cCI6MTY5NDUzNTkwMn0.kegMBOZNd1ivphjASVq8Sd5wOjJ4YLvXTQfmsbgi1DU\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/renewAccessToken",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"renewAccessToken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forget Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/forgetPassword",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"forgetPassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGZhY2IxZjQwMDcyMDQ3MjhiZmNjNDUiLCJpYXQiOjE2OTQ0MzM3MjcsImV4cCI6MTY5NDQzMzc4N30.7urrvshrBUiCvSIlO0wmAQC8ZTnYrjGFKMYKQ4xxdwI",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"password\": \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/changePassword",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"changePassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Profile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGZhY2IxZjQwMDcyMDQ3MjhiZmNjNDUiLCJpYXQiOjE2OTQ0MzY2MjgsImV4cCI6MTY5NDQzNzIyOH0.NxNE4khfmctu-3UvYNI8kgwgI52IUKWROvT0PhZd5HM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Admin\",\r\n    \"email\": \"admin@gmail.com\",\r\n    \"phone\": 9369788354,\r\n    \"plan\": \"Basic Plan\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/updateProfile",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"updateProfile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Bucket",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGZhY2IxZjQwMDcyMDQ3MjhiZmNjNDUiLCJpYXQiOjE2OTQ1MjE4OTcsImV4cCI6MTY5NDUyMjQ5N30.eBCRNrHOKzvkZ-WlghRi6R6fv0j7CLMHSHhKV6wCGIY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bucket_name\": \"bucket1\",\r\n    \"bucket_access\": \"singharpit0027@gmail.com\"\r\n    // \"operation_access\": \"Write\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/bucket/create-bucket",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"bucket",
+						"create-bucket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Allow Roles",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGZhY2IxZjQwMDcyMDQ3MjhiZmNjNDUiLCJpYXQiOjE2OTQ1Mzc0MjMsImV4cCI6MTY5NDY0NTQyM30.s9qUgd9AZDw9XzVgSr12maCPZR0J4QhzTtikXi0-v9k",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bucketId\": \"65005b634b9b00905cbc3a4d\",\r\n    \"accessUserId\": \"64fee0cb776aaa26126dbbdf\",\r\n    \"newOperationAccess\": \"read_write\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/bucket/allow-roles",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"bucket",
+						"allow-roles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Object",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGZhY2IxZjQwMDcyMDQ3MjhiZmNjNDUiLCJpYXQiOjE2OTQ1Mzc0MjMsImV4cCI6MTY5NDY0NTQyM30.s9qUgd9AZDw9XzVgSr12maCPZR0J4QhzTtikXi0-v9k",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "object",
+							"type": "file",
+							"src": "/E:/arp/profilePic.png"
+						},
+						{
+							"key": "object_name",
+							"value": "project_rar_file",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/bucket/upload-object/65005b634b9b00905cbc3a4d",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"bucket",
+						"upload-object",
+						"65005b634b9b00905cbc3a4d"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -20,4 +20,5 @@ route.post('/allow-roles', alloRolesValidation, expressValidationResult, allowRo
 route.post('/upload-object/:id', upload.single('object'), objectValidation, expressValidationResult, uploadObject);
 
 
+
 export default route;

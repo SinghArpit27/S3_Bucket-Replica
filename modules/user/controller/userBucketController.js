@@ -247,3 +247,4 @@ async function updateStorageSpace(bucketId, objectSize) {
 
   }
 }
+
